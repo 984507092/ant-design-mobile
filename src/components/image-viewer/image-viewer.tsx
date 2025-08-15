@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import type { FC, ReactNode } from 'react'
+import type { FC, ReactNode, RefObject } from 'react'
 import React, {
   forwardRef,
   useCallback,
@@ -26,9 +26,13 @@ export type ImageViewerProps = {
   visible?: boolean
   onClose?: () => void
   afterClose?: () => void
+  afterShow?: () => void
+  onMaskClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   renderFooter?: (image: string) => ReactNode
-  imageRender?: (image: string, { index }: { index: number }) => ReactNode
-  partialCustomRender?: boolean
+  imageRender?: (
+    image: string,
+    { ref, index }: { ref: RefObject<HTMLImageElement>; index: number }
+  ) => ReactNode
   classNames?: {
     mask?: string
     body?: string
@@ -51,6 +55,8 @@ export const ImageViewer: FC<ImageViewerProps> = p => {
       disableBodyScroll={false}
       opacity='thick'
       afterClose={props.afterClose}
+      afterShow={props.afterShow}
+      onMaskClick={props.onMaskClick}
       destroyOnClose
       className={props?.classNames?.mask}
     >
@@ -91,8 +97,10 @@ export type MultiImageViewerProps = Omit<
   defaultIndex?: number
   onIndexChange?: (index: number) => void
   renderFooter?: (image: string, index: number) => ReactNode
-  imageRender?: (image: string, { index }: { index: number }) => ReactNode
-  partialCustomRender?: boolean
+  imageRender?: (
+    image: string,
+    { ref, index }: { ref: RefObject<HTMLImageElement>; index: number }
+  ) => ReactNode
 }
 
 const multiDefaultProps = {
@@ -130,6 +138,8 @@ export const MultiImageViewer = forwardRef<
       disableBodyScroll={false}
       opacity='thick'
       afterClose={props.afterClose}
+      afterShow={props.afterShow}
+      onMaskClick={props.onMaskClick}
       destroyOnClose
       className={props?.classNames?.mask}
     >
